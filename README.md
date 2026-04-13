@@ -1,38 +1,60 @@
 # dev-mochi
 
-Project-focused status line for Claude Code. The project IS the beast.
+**Context enhancement for Claude Code.** Replace pet sprites with project context.
 
-No sprites. No quips. No XP. Just your project's identity, mission, roadmap, and metrics — always visible, zero token cost.
+Claude Code reserves screen real estate for a status line — rendered client-side, refreshed after every message, costing **zero API tokens**. Most plugins fill this space with virtual pets, XP bars, and personality quips. Dev-mochi fills it with your project's mission, roadmap, and progress.
 
-The status line is free screen real estate that doesn't consume API tokens. Dev-mochi fills it with the one thing that keeps every agent on task: **what you're building, why, and what's next.**
+The status line is the one free slot in Claude Code where you can surface information at zero cost. Dev-mochi is built around that asymmetry: put project context where it's free (the terminal, for the human), and keep CLAUDE.md lean (the context window, for the AI).
 
-## What it shows (6 lines)
+## What it looks like
 
 ```
-DEV-MOCHI · Project-focused status line for Claude Code │ dev → github.com/midnightnow/dev-mochi
-⎇ main │ Opus 4.6 (1M context) │ ━━━─────────── 19%
-5h ◆◆◆◆◆◇◇◇◇◇ 50% 6m→13:36 │ 7d ◆◆◆◇◇◇◇◇◇◇ 33% │ +317/-173 ↓30.4K↑100.0K
-■ Statusline renderer  ■ Config format  ▶ npm publish  □ Multi-project support
-PITCH │ Keep every AI agent focused on your project — not on being cute
-Node.js · Claude Code Status Line API
+◆ YOUR-PROJECT · Rebuild auth flow and deploy to staging │ staging → my-app.web.app
+⎇ feature/auth* │ Opus 4.6 (1M context) │ ━━━━━━──────── 38%
+5h ◆◆◆◆◆◇◇◇◇◇ 50% 7m→14:20 │ 7d ◆◆◆◇◇◇◇◇◇◇ 33% 2d→04/16 │ +240/-85 ↓48.0K↑95.0K
+■ Auth  ■ API routes  ▶ Dashboard  □ E2E tests  □ Deploy
+ROADMAP │ NOW: Rebuild auth flow with session tokens
+Node.js · Express · PostgreSQL │ Self-hosted identity layer for SMBs
 ```
 
-**Line 5 rotates** every 6 seconds through your full context:
-- **PITCH** — elevator pitch
-- **VISION** — what it becomes
-- **MOONSHOT** — the 10x dream
-- **ROADMAP** — NOW / NEXT / THEN / MOON (one per cycle)
-- **NEXT** — immediate action items (one per cycle)
+**Six lines. Always visible. Zero tokens consumed.**
 
-This is the context that gets copy-pasted into every agent, every worktree, every session. One file, one truth.
+| Line | Content |
+|------|---------|
+| 1 | Project name, mission, stage, deploy target |
+| 2 | Git branch, model, context window usage |
+| 3 | Rate limits (5h/7d), lines changed, tokens in/out |
+| 4 | Feature tracker with status icons |
+| 5 | **Rotating context** — cycles every 6 seconds (see below) |
+| 6 | Tech stack and design brief |
+
+### Line 5 rotation
+
+Every 6 seconds, line 5 advances to the next panel. Full cycle in ~90 seconds:
+
+```
+PITCH    │ Self-hosted identity layer — own your auth, own your users
+VISION   │ Every SMB runs their own auth instead of renting it from Big Tech
+MOAT     │ Zero vendor lock-in. Runs on a $5 VPS. No cloud dependencies
+MOONSHOT │ Federated identity mesh across SMB networks
+FRUIT    │ Session token rotation is a one-liner — just hasn't been wired
+WIN      │ Login flow works E2E on staging with test credentials
+SITREP   │ Auth rebuilt. API routes done. Dashboard blocked on token refresh
+EPOCHS   │ ■ Purified → ▶ Anchored → □ Distributed
+ROADMAP  │ NEXT: Dashboard integration with new session tokens
+NEXT     │ 1. Wire token refresh into dashboard middleware
+RISK     │ Scope creep into OAuth / Session fixation on shared hosts
+```
 
 ## Install
 
 ```bash
-# Clone
 git clone https://github.com/midnightnow/dev-mochi.git ~/.claude/dev-mochi
+```
 
-# Point Claude Code at it (~/.claude/settings.json)
+Add to `~/.claude/settings.json`:
+
+```json
 {
   "statusLine": {
     "type": "command",
@@ -44,19 +66,20 @@ git clone https://github.com/midnightnow/dev-mochi.git ~/.claude/dev-mochi
 
 ## Configure
 
-Drop a `.devmochi.json` in your project root. This is the single source of truth that keeps every agent — Claude Code, worktrees, subagents — locked on your project:
+Drop a `.devmochi.json` in your project root:
 
 ```json
 {
   "name": "YOUR-PROJECT",
-  "mission": "One-line current mission — what you're fixing/building right now",
-  "pitch": "One-line elevator pitch — why this matters",
+  "mission": "What you're building or fixing right now",
+  "pitch": "Why this project exists — one sentence",
   "vision": "What this becomes at scale",
-  "moonshot": "The 10x dream — where this goes if everything works",
-  "brief": "Design brief one-liner",
+  "moonshot": "The 10x dream if everything works",
+  "sit_rep": "What's working, what's broken, where's momentum",
+  "brief": "Design constraint one-liner",
   "stack": "Your tech stack",
   "stage": "staging",
-  "target": "your-staging-url.web.app",
+  "target": "your-deploy-url.web.app",
   "roadmap": [
     "NOW: What you're building this week",
     "NEXT: What unlocks after NOW ships",
@@ -64,9 +87,8 @@ Drop a `.devmochi.json` in your project root. This is the single source of truth
     "MOON: The endgame"
   ],
   "next_steps": [
-    "Immediate action item 1",
-    "Immediate action item 2",
-    "Immediate action item 3"
+    "Immediate action 1",
+    "Immediate action 2"
   ],
   "tracker": [
     { "label": "Feature A", "status": "done" },
@@ -77,114 +99,84 @@ Drop a `.devmochi.json` in your project root. This is the single source of truth
 }
 ```
 
-### Tracker statuses
+### Tracker icons
 
 | Status | Icon | Meaning |
 |--------|------|---------|
-| `done` | ■ (green) | Shipped |
-| `active` | ▶ (yellow) | In progress |
-| `blocked` | ■ (red) | Stuck |
-| `pending` | □ (dim) | Not started |
+| `done` | ■ green | Shipped |
+| `active` | ▶ yellow | In progress |
+| `blocked` | ■ red | Stuck |
+| `pending` | □ dim | Not started |
 
-### Fields
+## Context dilution vs context enhancement
 
-| Field | Purpose | Who reads it |
-|-------|---------|-------------|
-| `name` | Project identity — shown in BOLD on line 1 | You + every agent |
-| `mission` | Current sprint goal — what's broken or being built | Keeps agents on task |
-| `pitch` | Why this project exists in one sentence | Context for architectural decisions |
-| `vision` | What this becomes — the product at scale | Prevents over/under-engineering |
-| `moonshot` | The 10x dream | Keeps ambition visible |
-| `brief` | Design constraint one-liner | Shown on line 6, always visible |
-| `stage` | `dev` / `staging` / `production` | Safety gate — agents see this |
-| `target` | Deploy URL | Prevents wrong-target deploys |
-| `roadmap` | NOW/NEXT/THEN/MOON | Rotating on line 5 |
-| `next_steps` | Immediate action items | Rotating on line 5 |
-| `tracker` | Feature status board | Line 4 — at-a-glance progress |
+Claude Code injects system context on every turn: git status, CLAUDE.md, memory files, branch info. These are useful but they consume input tokens every message. The more you put in CLAUDE.md, the more you pay per turn.
 
-## Multi-agent use
+The status line is the exception — the one injection point that costs zero tokens.
 
-The `.devmochi.json` is designed to be the thing you copy-paste (or symlink) into every context that needs project awareness:
+Most status line plugins fill this free space with entertainment: pixel sprites, hunger meters, XP progress bars, sassy quips about your code. This is **context dilution** — splitting your attention between entertainment and engineering.
 
-- **Worktrees**: symlink `.devmochi.json` so every worktree agent sees the same mission
-- **Subagents**: the status line runs per-agent, each one sees the project context
-- **New sessions**: no ramp-up — the agent reads the status line and knows the mission instantly
-- **Handoffs**: paste the JSON into a new conversation and the agent has full context
+Dev-mochi uses the same space for **context enhancement**. When your project name, deploy target, feature tracker, and current mission are always visible in the terminal, your prompts get more precise. More precise prompts mean less wasted output. Less wasted output means less context consumed per turn. The status line costs nothing but compresses your token spend everywhere else.
 
 ## Moonshot Protocol (MP-1)
 
-Dev-mochi supports the Moonshot Protocol — a structured way to define your project's physics so agents can't drift into hallucinated progress.
+A structured config format for defining a project so every agent session starts oriented. If you can articulate these 10 things, context loss stops being a problem.
 
-### The 10 Fields
+| # | Field | What it answers |
+|---|-------|----------------|
+| 1 | **Vision** | Where does this go in 10 years? |
+| 2 | **Mission** | What's the unsexy lever we're pulling today? |
+| 3 | **Pitch** | One sentence — why does this matter? |
+| 4 | **Roadmap** | What are the verifiable state changes (not dates)? |
+| 5 | **Moonshot** | What's the 10x outcome? |
+| 6 | **Low-Hanging Fruit** | What gaps just need execution, not thinking? |
+| 7 | **Quick Wins** | What proves viability in 24 hours? |
+| 8 | **Next Steps** | What's the immediate technical sequence? |
+| 9 | **Current Project** | Name and scope of the beast |
+| 10 | **Sit Rep** | What's broken, working, and where's momentum? |
 
-1. **Vision** — 10-year North Star. The world state after the project succeeds.
-2. **Mission** — The unsexy engineering lever. How we move the world toward the vision.
-3. **Pitch** — High-compression signal. One sentence to lock the AI into the core problem.
-4. **Roadmap** — Verifiable milestones (Epochs). State changes, not dates.
-5. **Moonshot** — The 10x goal. Radical outcomes requiring non-linear thinking.
-6. **Low-Hanging Fruit** — Structural gaps that require zero "trying" — just execution.
-7. **Quick Wins** — High-visibility victories to prove viability within 24 hours.
-8. **Next Steps** — The immediate technical sequence.
-9. **Current Project** — Name and scope of the beast being built.
-10. **Sit Rep** — What's broken, what's working, where the momentum is right now.
-
-### MP-1 Fields in `.devmochi.json`
+All 10 fields rotate on line 5. Additional MP-1 fields:
 
 ```json
 {
   "protocol": "MP-1",
-  "name": "DEV-MOCHI",
-  "vision": "Status lines as shared consciousness for all agents — zero context drift.",
-  "mission": "Zero-dependency renderer reading project context from a single .json file.",
-  "pitch": "Feed the project commits, not kibble — the status line IS the beast.",
-  "moonshot": "Status line that auto-evolves its roadmap from git history.",
-  "roadmap": ["Epoch 1: Renderer Core", "Epoch 2: Cross-agent sync", "Epoch 3: npm distribution"],
-  "low_hanging": ["Normalize flat configs so old schema doesn't break"],
-  "quick_wins": ["MISSION and PITCH visible in terminal refresh cycle"],
-  "next_steps": ["npm publish", "Worktree symlink helper"],
-  "sit_rep": "Core renderer functional. Dual-schema landed. Ready for npm publish.",
-  "moat": "Zero-dependency Node stdlib. <5ms render. Nothing to supply-chain attack.",
-  "pre_mortem": ["Context leakage", "Dependency rot", "Hallucinated progress"]
+  "moat": "What makes this impossible to copy in 24 hours",
+  "low_hanging": ["Gap that just needs execution"],
+  "quick_wins": ["24-hour proof of viability"],
+  "sit_rep": "Honest current status",
+  "epochs": [
+    { "name": "Purified", "status": "done" },
+    { "name": "Anchored", "status": "active" },
+    { "name": "Distributed", "status": "pending" }
+  ],
+  "pre_mortem": ["How this fails", "And what kills it"]
 }
 ```
 
-### What rotates on Line 5
+## Multi-agent use
 
-The renderer cycles through every MP-1 dimension every 6 seconds:
+The `.devmochi.json` is designed to be the single source of truth across all contexts:
 
-```
-PITCH    │ Feed the project commits, not kibble...
-VISION   │ Status lines as shared consciousness for all agents...
-MOAT     │ Zero-dependency Node stdlib. <5ms render...
-MOONSHOT │ Status line that auto-evolves its roadmap...
-FRUIT    │ Normalize flat configs so old schema doesn't break
-WIN      │ MISSION and PITCH visible in terminal refresh cycle
-SITREP   │ Core renderer functional. Dual-schema landed...
-EPOCHS   │ ■ Purified → ▶ Anchored → □ Distributed
-ROADMAP  │ Epoch 1: Renderer Core (one per cycle)
-NEXT     │ 1. npm publish (one per cycle)
-RISK     │ Context leakage / Dependency rot / Hallucinated progress
-```
+- **Worktrees** — symlink so every worktree agent sees the same mission
+- **Subagents** — status line runs per-agent, each one reads the config
+- **New sessions** — no ramp-up, the project context is already visible
+- **Handoffs** — paste the JSON into a new conversation for instant orientation
+- **CLAUDE.md** — reference the file so the AI reads it too (opt-in, costs tokens)
 
-Every agent that reads this status line knows: what we're building, why it matters, what can kill it, and what to do next. No ramp-up required.
+## Technical
 
-## Why not a pet?
-
-Most status line tools give you a virtual pet that reacts to your coding. Cute, but:
-
-- Pet animations waste screen space on entertainment
-- Personality quips add noise to your thinking
-- XP/leveling systems gamify the wrong thing
-- None of it helps the AI agent do its job better
-
-Dev-mochi puts your **project mission, roadmap, and progress** where the pet would be. The creature you're raising is the product itself.
+- **Zero dependencies** — Node.js stdlib only. Nothing to install, nothing to break.
+- **<5ms render** — reads JSON, writes ANSI to stdout.
+- **10-directory walk** — finds `.devmochi.json` from any subdirectory or worktree depth.
+- **Dual schema** — flat config for simple projects, structured/nested for complex ones.
+- **ANSI truecolor** — context bars, rate limit diamonds, tracker icons, color-coded panels.
 
 ## Inspired by
 
 - [claude-code-tamagotchi](https://github.com/Ido-Levi/claude-code-tamagotchi) — behavioral enforcement pet
-- [tokburn](https://github.com/nicholasgriffintn/tokburn) — Tokemon status line (sprites + XP)
+- [tokburn](https://github.com/nicholasgriffintn/tokburn) — Tokemon status line with sprites and XP
 
-Dev-mochi takes the opposite approach: the project is the creature. Feed it commits, not kibble.
+Dev-mochi takes the opposite approach. The project is the creature. Feed it commits, not kibble.
 
 ## License
 

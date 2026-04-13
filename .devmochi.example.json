@@ -1,28 +1,45 @@
 {
-  "name": "DEV-MOCHI",
-  "mission": "Project-focused status line for Claude Code",
-  "pitch": "Keep every AI agent focused on your project — not on being cute",
-  "vision": "Single source of truth that every agent, worktree, and session reads on startup",
-  "moonshot": "Auto-updating project context that syncs across all agents and surfaces blockers before you hit them",
-  "brief": "Replace pet sprites with project identity. Zero token cost. One config file.",
-  "stack": "Node.js · Claude Code Status Line API",
-  "stage": "dev",
-  "target": "github.com/midnightnow/dev-mochi",
+  "protocol": "MP-1",
+  "name": "YOUR-PROJECT",
+  "mission": "What you're building or fixing right now",
+  "pitch": "Why this project exists — one sentence",
+  "vision": "What this becomes at scale",
+  "moonshot": "The 10x dream if everything works",
+  "moat": "What makes this impossible to copy in 24 hours",
+  "sit_rep": "What's working, what's broken, where's momentum",
+  "brief": "Design constraint one-liner",
+  "stack": "Your tech stack",
+  "stage": "staging",
+  "target": "your-deploy-url.web.app",
   "roadmap": [
-    "NOW: Core renderer + .devmochi.json config format",
-    "NEXT: npm publish + one-command install",
-    "THEN: Multi-project support with directory-aware config switching",
-    "MOON: Auto-populate from git history, CI status, and issue trackers"
+    "NOW: What you're building this week",
+    "NEXT: What unlocks after NOW ships",
+    "THEN: The medium-term play",
+    "MOON: The endgame"
+  ],
+  "low_hanging": [
+    "Gap that just needs execution, not thinking"
+  ],
+  "quick_wins": [
+    "What proves viability in 24 hours"
   ],
   "next_steps": [
-    "Publish to npm as dev-mochi",
-    "Add CLAUDE.md integration — auto-read .devmochi.json fields",
-    "Worktree symlink helper script"
+    "Immediate action 1",
+    "Immediate action 2"
+  ],
+  "epochs": [
+    { "name": "Purified", "status": "done" },
+    { "name": "Anchored", "status": "active" },
+    { "name": "Scaling", "status": "pending" }
+  ],
+  "pre_mortem": [
+    "How this fails",
+    "What kills it"
   ],
   "tracker": [
-    { "label": "Statusline renderer", "status": "done" },
-    { "label": "Config format", "status": "done" },
-    { "label": "npm publish", "status": "active" },
-    { "label": "Multi-project", "status": "pending" }
+    { "label": "Feature A", "status": "done" },
+    { "label": "Feature B", "status": "active" },
+    { "label": "Feature C", "status": "pending" },
+    { "label": "Feature D", "status": "blocked" }
   ]
 }
