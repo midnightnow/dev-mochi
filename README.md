@@ -115,15 +115,18 @@ The `.devmochi.json` is designed to be the thing you copy-paste (or symlink) int
 
 Dev-mochi supports the Moonshot Protocol — a structured way to define your project's physics so agents can't drift into hallucinated progress.
 
-### The 7 Steps
+### The 10 Fields
 
-1. **The Constant (Vision)** — State the fixed 10-year endpoint. If this works perfectly, what is the new physics of the industry?
-2. **The Lever (Mission)** — What is the unsexy, high-impact mechanism we are building today to move that needle?
-3. **High-Compression Pitch** — One sentence. Pure signal. Focus the AI on the problem, not the features.
-4. **The Moat** — Why a competitor can't copy this in 24 hours.
-5. **Epoch Mapping** — Divide the roadmap into verifiable state changes, not dates.
-6. **The First Domino** — Single most impactful action in the next 24 hours to collapse the timeline.
-7. **The Pre-Mortem** — How this fails, and the kill-switch for each failure mode.
+1. **Vision** — 10-year North Star. The world state after the project succeeds.
+2. **Mission** — The unsexy engineering lever. How we move the world toward the vision.
+3. **Pitch** — High-compression signal. One sentence to lock the AI into the core problem.
+4. **Roadmap** — Verifiable milestones (Epochs). State changes, not dates.
+5. **Moonshot** — The 10x goal. Radical outcomes requiring non-linear thinking.
+6. **Low-Hanging Fruit** — Structural gaps that require zero "trying" — just execution.
+7. **Quick Wins** — High-visibility victories to prove viability within 24 hours.
+8. **Next Steps** — The immediate technical sequence.
+9. **Current Project** — Name and scope of the beast being built.
+10. **Sit Rep** — What's broken, what's working, where the momentum is right now.
 
 ### MP-1 Fields in `.devmochi.json`
 
@@ -131,24 +134,17 @@ Dev-mochi supports the Moonshot Protocol — a structured way to define your pro
 {
   "protocol": "MP-1",
   "name": "DEV-MOCHI",
-  "vision": "Single source of truth that every agent reads — zero drift, zero context loss.",
-  "mission": "Zero-dependency CLI agents that maintain project context via .json anchors.",
-  "pitch": "The project IS the beast. Feed it commits, not kibble.",
-  "moat": "Zero-dependency Node stdlib. Nothing to break, nothing to supply-chain attack.",
-  "moonshot": "Auto-updating project manifold across all agents and sessions.",
-  "physics": "Status line = 0 API tokens. 6s rotation = full context in 96s. 10-dir walk = any worktree.",
-  "first_domino": "npm publish dev-mochi — one command install.",
-  "epochs": [
-    { "name": "Purified", "status": "done" },
-    { "name": "Anchored", "status": "active" },
-    { "name": "Fractal", "status": "pending" },
-    { "name": "Omega", "status": "pending" }
-  ],
-  "pre_mortem": [
-    "Context leakage — parent project bleeds into dev-mochi identity",
-    "Dependency rot — adding npm deps destroys the zero-dependency moat",
-    "Hallucinated progress — tracker says done but no test proves it"
-  ]
+  "vision": "Status lines as shared consciousness for all agents — zero context drift.",
+  "mission": "Zero-dependency renderer reading project context from a single .json file.",
+  "pitch": "Feed the project commits, not kibble — the status line IS the beast.",
+  "moonshot": "Status line that auto-evolves its roadmap from git history.",
+  "roadmap": ["Epoch 1: Renderer Core", "Epoch 2: Cross-agent sync", "Epoch 3: npm distribution"],
+  "low_hanging": ["Normalize flat configs so old schema doesn't break"],
+  "quick_wins": ["MISSION and PITCH visible in terminal refresh cycle"],
+  "next_steps": ["npm publish", "Worktree symlink helper"],
+  "sit_rep": "Core renderer functional. Dual-schema landed. Ready for npm publish.",
+  "moat": "Zero-dependency Node stdlib. <5ms render. Nothing to supply-chain attack.",
+  "pre_mortem": ["Context leakage", "Dependency rot", "Hallucinated progress"]
 }
 ```
 
@@ -157,16 +153,17 @@ Dev-mochi supports the Moonshot Protocol — a structured way to define your pro
 The renderer cycles through every MP-1 dimension every 6 seconds:
 
 ```
-PITCH    │ Stop raising virtual pets. Raise the product...
-VISION   │ Single source of truth that every agent reads...
-MOAT     │ Zero-dependency Node stdlib. Nothing to break...
-MOONSHOT │ Auto-updating project manifold across all agents...
-PHYSICS  │ Status line = 0 API tokens. 6s rotation = full context...
-DOMINO   │ npm publish dev-mochi — one command install
-EPOCHS   │ ■ Purified → ▶ Anchored → □ Fractal → □ Omega
-ROADMAP  │ NOW: MP-1 protocol integration + npm publish
+PITCH    │ Feed the project commits, not kibble...
+VISION   │ Status lines as shared consciousness for all agents...
+MOAT     │ Zero-dependency Node stdlib. <5ms render...
+MOONSHOT │ Status line that auto-evolves its roadmap...
+FRUIT    │ Normalize flat configs so old schema doesn't break
+WIN      │ MISSION and PITCH visible in terminal refresh cycle
+SITREP   │ Core renderer functional. Dual-schema landed...
+EPOCHS   │ ■ Purified → ▶ Anchored → □ Distributed
+ROADMAP  │ Epoch 1: Renderer Core (one per cycle)
+NEXT     │ 1. npm publish (one per cycle)
 RISK     │ Context leakage / Dependency rot / Hallucinated progress
-PLATFORM │ Claude Code statusline API → any terminal
 ```
 
 Every agent that reads this status line knows: what we're building, why it matters, what can kill it, and what to do next. No ramp-up required.

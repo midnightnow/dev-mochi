@@ -5,14 +5,19 @@
  * The project IS the beast. Every line keeps the AI focused on what
  * we're building, why, and what's next. No sprites. No quips. No XP.
  *
- * Supports Moonshot Protocol (MP-1) fields:
- *   protocol, vision, mission, pitch, moat, moonshot,
- *   first_domino, epochs, pre_mortem, constraints, tracker
+ * Moonshot Protocol (MP-1) — 10 fields:
+ *   1. vision          — 10-year North Star
+ *   2. mission         — unsexy engineering lever
+ *   3. pitch           — high-compression signal
+ *   4. roadmap/epochs  — verifiable state changes, not dates
+ *   5. moonshot        — 10x non-linear goal
+ *   6. low_hanging     — structural gaps, zero trying
+ *   7. quick_wins      — 24-hour proof of viability
+ *   8. next_steps      — immediate technical sequence
+ *   9. name/project    — name + scope of the beast
+ *  10. sit_rep         — what's broken, working, where's momentum
  *
- * Config schemas (both work, can be mixed):
- *
- * FLAT:  { name, mission, pitch, moat, epochs, first_domino, pre_mortem, ... }
- * NESTED: { identity: {}, vision: {}, roadmap: {}, constraints: {}, ... }
+ * Plus: moat, constraints, tracker, stack, stage, target
  */
 
 const fs = require('fs');
@@ -115,7 +120,7 @@ function loadConfig(cwd) {
   return null;
 }
 
-// Normalize nested (Platonic) or flat schema into a uniform interface
+// Normalize nested or flat schema into a uniform interface
 function normalize(raw) {
   if (!raw) return null;
 
@@ -151,6 +156,15 @@ function normalize(raw) {
 
     // First Domino (MP-1: 24-hour collapse action)
     first_domino: raw.first_domino || null,
+
+    // Low-Hanging Fruit (MP-1: structural gaps, zero trying)
+    low_hanging: raw.low_hanging || null,
+
+    // Quick Wins (MP-1: 24-hour proof of viability)
+    quick_wins: raw.quick_wins || null,
+
+    // Sit Rep (MP-1: what's broken, working, where's momentum)
+    sit_rep: raw.sit_rep || null,
 
     // Pre-Mortem (MP-1: black swans + circuit breakers)
     pre_mortem: raw.pre_mortem || null,
@@ -301,8 +315,29 @@ function L5(cfg) {
   // Physics (MP-1: hard limits)
   if (cfg.physics) panels.push({ label: 'PHYSICS', text: cfg.physics, color: C.gold });
 
-  // First Domino (MP-1: 24hr action — always visible, high urgency)
+  // Low-Hanging Fruit (MP-1: structural gaps, zero trying)
+  if (cfg.low_hanging && cfg.low_hanging.length) {
+    cfg.low_hanging.forEach(f => {
+      panels.push({ label: 'FRUIT', text: typeof f === 'string' ? f : f.text || f, color: C.green });
+    });
+  } else if (cfg.low_hanging && typeof cfg.low_hanging === 'string') {
+    panels.push({ label: 'FRUIT', text: cfg.low_hanging, color: C.green });
+  }
+
+  // Quick Wins (MP-1: 24-hour proof)
+  if (cfg.quick_wins && cfg.quick_wins.length) {
+    cfg.quick_wins.forEach(w => {
+      panels.push({ label: 'WIN', text: typeof w === 'string' ? w : w.text || w, color: C.gold });
+    });
+  } else if (cfg.quick_wins && typeof cfg.quick_wins === 'string') {
+    panels.push({ label: 'WIN', text: cfg.quick_wins, color: C.gold });
+  }
+
+  // First Domino (MP-1: 24hr collapse action)
   if (cfg.first_domino) panels.push({ label: 'DOMINO', text: cfg.first_domino, color: C.red });
+
+  // Sit Rep (MP-1: current state of the battlefield)
+  if (cfg.sit_rep) panels.push({ label: 'SITREP', text: cfg.sit_rep, color: C.yellow });
 
   // Epochs (MP-1: state transitions, not months)
   if (cfg.epochs && cfg.epochs.length) {
