@@ -1,28 +1,28 @@
 {
-  "name": "MY-PROJECT",
-  "mission": "One-line current mission",
-  "pitch": "One-line elevator pitch",
-  "vision": "What this becomes at scale",
-  "moonshot": "The 10x dream — where this goes if everything works",
-  "brief": "Design brief one-liner for the product",
-  "stack": "Firebase · React · Stripe",
-  "stage": "staging",
-  "target": "my-app.web.app",
+  "name": "DEV-MOCHI",
+  "mission": "Project-focused status line for Claude Code",
+  "pitch": "Keep every AI agent focused on your project — not on being cute",
+  "vision": "Single source of truth that every agent, worktree, and session reads on startup",
+  "moonshot": "Auto-updating project context that syncs across all agents and surfaces blockers before you hit them",
+  "brief": "Replace pet sprites with project identity. Zero token cost. One config file.",
+  "stack": "Node.js · Claude Code Status Line API",
+  "stage": "dev",
+  "target": "github.com/midnightnow/dev-mochi",
   "roadmap": [
-    "NOW: What you're building this week",
-    "NEXT: What unlocks after NOW ships",
-    "THEN: The medium-term play",
-    "MOON: The endgame"
+    "NOW: Core renderer + .devmochi.json config format",
+    "NEXT: npm publish + one-command install",
+    "THEN: Multi-project support with directory-aware config switching",
+    "MOON: Auto-populate from git history, CI status, and issue trackers"
   ],
   "next_steps": [
-    "Immediate action item 1",
-    "Immediate action item 2",
-    "Immediate action item 3"
+    "Publish to npm as dev-mochi",
+    "Add CLAUDE.md integration — auto-read .devmochi.json fields",
+    "Worktree symlink helper script"
   ],
   "tracker": [
-    { "label": "Auth flow", "status": "done" },
-    { "label": "Payments", "status": "active" },
-    { "label": "Dashboard", "status": "pending" },
-    { "label": "Deploy", "status": "blocked" }
+    { "label": "Statusline renderer", "status": "done" },
+    { "label": "Config format", "status": "done" },
+    { "label": "npm publish", "status": "active" },
+    { "label": "Multi-project", "status": "pending" }
   ]
 }
