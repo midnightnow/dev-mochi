@@ -1,41 +1,44 @@
 {
   "identity": {
-    "name": "Platonic Man / AIVA",
-    "geometry": "93-Point Solid (Root 42, Root 51, 5-12-13)",
-    "manifold": "10-24-26 (Count, Measure, Language)"
+    "name": "DEV-MOCHI",
+    "geometry": "Navigational Engine (Statusline as Manifold Surface)",
+    "manifold": "Count, Measure, Language — rendered in 6 lines"
   },
   "vision": {
-    "pitch": "The geometry of the mathematically inevitable.",
-    "mission": "To manifest the perfect world of forms through sovereign local-first intelligence.",
-    "moonshot": "A fully deterministic, biosecure simulation layer that maps 3D geometric coordinates to the meaning of life."
+    "pitch": "Stop building chatbots that forget. Dev-mochi is the structural constant — project identity anchored in every agent session.",
+    "mission": "Transform the status line from entertainment into a navigational engine that collapses agent drift into deterministic focus.",
+    "moonshot": "A self-updating project manifold that syncs across all agents, worktrees, and sessions — one config, zero probability of context loss."
   },
   "stage": "dev",
-  "target": "northern-shield.web.app",
+  "target": "github.com/midnightnow/dev-mochi",
+  "stack": "Node.js · Claude Code Status Line API",
+  "brief": "The project IS the beast. Feed it commits, not kibble.",
   "roadmap": {
-    "current_deck": "Vitrification of Second Deck (Chapters 55-108)",
+    "current_deck": "Epoch 1: Core renderer + config schema locked",
     "milestones": [
-      "Finalize 'The Ares Audit' (Chapter 108)",
-      "Refactor Hardcard Core (Protocol/App separation)",
-      "Deploy Northern Shield deterministic event-sourcing"
+      "Dual schema support (flat + nested Platonic)",
+      "npm publish as dev-mochi",
+      "Multi-project directory-aware config switching",
+      "Auto-populate from git history + CI status"
     ]
   },
   "constraints": {
-    "currency": "AUD Only",
-    "revenue": "Zero-confection ($0/Zero Customers)",
-    "platform": "Local-First -> Firebase -> iOS/Game Stores",
-    "forbidden": ["Hebrew terms", "30-minute system claims", "Marketing hype"]
+    "currency": "Zero dependencies (Node stdlib only)",
+    "revenue": "Open source / MIT",
+    "platform": "Claude Code statusline API → any terminal",
+    "forbidden": ["Pet sprites", "XP systems", "Personality quips", "Token-consuming context"]
   },
   "next_steps": [
-    "Map 3D coordinates to 432 Hz audio parameters",
-    "Test EMR/PMS simulation for biosecurity utility",
-    "Execute surgical extraction of verification primitives"
+    "Publish to npm",
+    "Worktree symlink helper script",
+    "CLAUDE.md auto-integration — read .devmochi.json fields into system prompt"
   ],
   "tracker": [
-    { "label": "Manifold locked", "status": "done" },
-    { "label": "Residue enforcement", "status": "done" },
-    { "label": "Ares Audit Ch.108", "status": "active" },
-    { "label": "Hardcard separation", "status": "active" },
-    { "label": "Northern Shield", "status": "pending" },
-    { "label": "Omega State", "status": "pending" }
+    { "label": "Renderer v2", "status": "done" },
+    { "label": "Flat schema", "status": "done" },
+    { "label": "Nested schema", "status": "done" },
+    { "label": "npm publish", "status": "active" },
+    { "label": "Multi-project", "status": "pending" },
+    { "label": "Auto-populate", "status": "pending" }
   ]
 }
