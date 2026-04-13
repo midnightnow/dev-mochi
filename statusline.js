@@ -1,21 +1,18 @@
 #!/usr/bin/env node
 /**
- * dev-mochi v2 — Project-focused status line for Claude Code
+ * dev-mochi v3 — Project-focused status line for Claude Code
  *
  * The project IS the beast. Every line keeps the AI focused on what
  * we're building, why, and what's next. No sprites. No quips. No XP.
  *
- * Supports two config schemas:
+ * Supports Moonshot Protocol (MP-1) fields:
+ *   protocol, vision, mission, pitch, moat, moonshot,
+ *   first_domino, epochs, pre_mortem, constraints, tracker
  *
- * FLAT (simple projects):
- *   { name, mission, pitch, vision, moonshot, stack, stage, target, ... }
+ * Config schemas (both work, can be mixed):
  *
- * NESTED (Platonic/structured projects):
- *   { identity: { name, geometry, manifold },
- *     vision: { pitch, mission, moonshot },
- *     roadmap: { current_deck, milestones },
- *     constraints: { currency, revenue, platform, forbidden },
- *     next_steps, tracker }
+ * FLAT:  { name, mission, pitch, moat, epochs, first_domino, pre_mortem, ... }
+ * NESTED: { identity: {}, vision: {}, roadmap: {}, constraints: {}, ... }
  */
 
 const fs = require('fs');
@@ -126,6 +123,9 @@ function normalize(raw) {
   const nested = raw.identity && typeof raw.identity === 'object';
 
   return {
+    // Protocol
+    protocol:  raw.protocol || null,
+
     // Identity
     name:      nested ? raw.identity.name : raw.name,
     geometry:  nested ? raw.identity.geometry : raw.geometry,
@@ -135,12 +135,25 @@ function normalize(raw) {
     mission:   nested ? (raw.vision && raw.vision.mission) : raw.mission,
     pitch:     nested ? (raw.vision && raw.vision.pitch) : raw.pitch,
     moonshot:  nested ? (raw.vision && raw.vision.moonshot) : raw.moonshot,
-    vision:    nested ? null : raw.vision, // flat schema has separate vision string
+    vision:    nested ? null : raw.vision,
+
+    // Moat + Physics
+    moat:      raw.moat || null,
+    physics:   raw.physics || null,
 
     // Roadmap
     current_deck: nested ? (raw.roadmap && raw.roadmap.current_deck) : raw.current_deck,
     milestones:   nested ? (raw.roadmap && raw.roadmap.milestones) : null,
-    roadmap:      nested ? null : raw.roadmap, // flat schema has roadmap array
+    roadmap:      nested ? null : raw.roadmap,
+
+    // Epochs (MP-1: replace months with state changes)
+    epochs:    raw.epochs || null,
+
+    // First Domino (MP-1: 24-hour collapse action)
+    first_domino: raw.first_domino || null,
+
+    // Pre-Mortem (MP-1: black swans + circuit breakers)
+    pre_mortem: raw.pre_mortem || null,
 
     // Constraints
     constraints: raw.constraints || null,
@@ -262,7 +275,7 @@ function L4(cfg) {
   return parts.length ? parts.join('') : DIM + '\u254C'.repeat(60) + RESET;
 }
 
-// Line 5: rotating context — cycles through all project dimensions
+// Line 5: rotating context — cycles through all project dimensions + MP-1 protocol
 function L5(cfg) {
   if (!cfg) return '';
 
@@ -279,8 +292,28 @@ function L5(cfg) {
   // Vision (flat schema)
   if (cfg.vision) panels.push({ label: 'VISION', text: cfg.vision, color: C.blue });
 
+  // Moat (MP-1)
+  if (cfg.moat) panels.push({ label: 'MOAT', text: cfg.moat, color: C.green });
+
   // Moonshot
   if (cfg.moonshot) panels.push({ label: 'MOONSHOT', text: cfg.moonshot, color: C.accent });
+
+  // Physics (MP-1: hard limits)
+  if (cfg.physics) panels.push({ label: 'PHYSICS', text: cfg.physics, color: C.gold });
+
+  // First Domino (MP-1: 24hr action — always visible, high urgency)
+  if (cfg.first_domino) panels.push({ label: 'DOMINO', text: cfg.first_domino, color: C.red });
+
+  // Epochs (MP-1: state transitions, not months)
+  if (cfg.epochs && cfg.epochs.length) {
+    const epochStr = cfg.epochs.map((e, i) => {
+      if (typeof e === 'string') return e;
+      // Support { name, status } objects
+      const ico = e.status === 'done' ? '\u25A0' : e.status === 'active' ? '\u25B6' : '\u25A1';
+      return ico + ' ' + (e.name || e);
+    }).join(' \u2192 ');
+    panels.push({ label: 'EPOCHS', text: epochStr, color: C.magenta });
+  }
 
   // Current deck (nested schema)
   if (cfg.current_deck) {
@@ -308,7 +341,13 @@ function L5(cfg) {
     });
   }
 
-  // Constraints platform (surfaces the deployment path)
+  // Pre-Mortem (MP-1: black swans — surfaces risks so agents don't walk into them)
+  if (cfg.pre_mortem && cfg.pre_mortem.length) {
+    const risks = cfg.pre_mortem.map(r => typeof r === 'string' ? r : r.risk || r).join(' / ');
+    panels.push({ label: 'RISK', text: risks, color: C.red });
+  }
+
+  // Constraints platform
   if (cfg.constraints && cfg.constraints.platform) {
     panels.push({ label: 'PLATFORM', text: cfg.constraints.platform, color: C.muted });
   }

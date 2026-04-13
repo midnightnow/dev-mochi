@@ -1,0 +1,51 @@
+{
+  "protocol": "MP-1",
+  "name": "DEV-MOCHI",
+  "mission": "Transform the status line from entertainment into a navigational engine that collapses agent drift into deterministic focus.",
+  "pitch": "Stop raising virtual pets. Raise the product. One config file anchors every agent to your project's physics.",
+  "vision": "Single source of truth that every agent, worktree, and session reads — zero ramp-up, zero drift, zero context loss.",
+  "moat": "Zero-dependency renderer reading a single JSON file. No API keys, no cloud, no build step. Runs in <5ms. Nothing to break, nothing to copy without copying the philosophy.",
+  "moonshot": "Auto-updating project manifold — syncs across all agents, surfaces blockers before you hit them, rejects work that doesn't serve the mission.",
+  "physics": "Status line = 0 API tokens consumed. 6-second rotation = full context in 90s. Config walks up 10 dirs = works in any worktree depth.",
+  "first_domino": "npm publish dev-mochi — one command install for anyone with Claude Code.",
+  "epochs": [
+    { "name": "Purified", "status": "done" },
+    { "name": "Anchored", "status": "active" },
+    { "name": "Fractal", "status": "pending" },
+    { "name": "Omega", "status": "pending" }
+  ],
+  "pre_mortem": [
+    "Context leakage — parent project CLAUDE.md bleeds into dev-mochi identity",
+    "Dependency rot — adding npm deps destroys the zero-dependency moat",
+    "Hallucinated progress — tracker says done but no E2E test proves it"
+  ],
+  "constraints": {
+    "currency": "Zero dependencies (Node stdlib only)",
+    "revenue": "Open source / MIT",
+    "platform": "Claude Code statusline API → any terminal",
+    "forbidden": ["Pet sprites", "XP systems", "Personality quips", "External API calls", "Build steps"]
+  },
+  "stack": "Node.js · Claude Code Status Line API · JSON config",
+  "stage": "dev",
+  "target": "github.com/midnightnow/dev-mochi",
+  "brief": "The project IS the beast. Feed it commits, not kibble.",
+  "roadmap": [
+    "NOW: MP-1 protocol integration + npm publish",
+    "NEXT: Multi-project directory-aware config switching",
+    "THEN: CLAUDE.md auto-integration — .devmochi.json fields in system prompt",
+    "MOON: Autonomous project manifold — git history + CI status + issue trackers"
+  ],
+  "next_steps": [
+    "npm publish dev-mochi",
+    "Worktree symlink helper script",
+    "README: full MP-1 spec with codification example"
+  ],
+  "tracker": [
+    { "label": "Renderer v3", "status": "done" },
+    { "label": "Flat schema", "status": "done" },
+    { "label": "Nested schema", "status": "done" },
+    { "label": "MP-1 protocol", "status": "active" },
+    { "label": "npm publish", "status": "pending" },
+    { "label": "Multi-project", "status": "pending" }
+  ]
+}

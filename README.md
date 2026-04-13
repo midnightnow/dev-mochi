@@ -111,6 +111,66 @@ The `.devmochi.json` is designed to be the thing you copy-paste (or symlink) int
 - **New sessions**: no ramp-up — the agent reads the status line and knows the mission instantly
 - **Handoffs**: paste the JSON into a new conversation and the agent has full context
 
+## Moonshot Protocol (MP-1)
+
+Dev-mochi supports the Moonshot Protocol — a structured way to define your project's physics so agents can't drift into hallucinated progress.
+
+### The 7 Steps
+
+1. **The Constant (Vision)** — State the fixed 10-year endpoint. If this works perfectly, what is the new physics of the industry?
+2. **The Lever (Mission)** — What is the unsexy, high-impact mechanism we are building today to move that needle?
+3. **High-Compression Pitch** — One sentence. Pure signal. Focus the AI on the problem, not the features.
+4. **The Moat** — Why a competitor can't copy this in 24 hours.
+5. **Epoch Mapping** — Divide the roadmap into verifiable state changes, not dates.
+6. **The First Domino** — Single most impactful action in the next 24 hours to collapse the timeline.
+7. **The Pre-Mortem** — How this fails, and the kill-switch for each failure mode.
+
+### MP-1 Fields in `.devmochi.json`
+
+```json
+{
+  "protocol": "MP-1",
+  "name": "DEV-MOCHI",
+  "vision": "Single source of truth that every agent reads — zero drift, zero context loss.",
+  "mission": "Zero-dependency CLI agents that maintain project context via .json anchors.",
+  "pitch": "The project IS the beast. Feed it commits, not kibble.",
+  "moat": "Zero-dependency Node stdlib. Nothing to break, nothing to supply-chain attack.",
+  "moonshot": "Auto-updating project manifold across all agents and sessions.",
+  "physics": "Status line = 0 API tokens. 6s rotation = full context in 96s. 10-dir walk = any worktree.",
+  "first_domino": "npm publish dev-mochi — one command install.",
+  "epochs": [
+    { "name": "Purified", "status": "done" },
+    { "name": "Anchored", "status": "active" },
+    { "name": "Fractal", "status": "pending" },
+    { "name": "Omega", "status": "pending" }
+  ],
+  "pre_mortem": [
+    "Context leakage — parent project bleeds into dev-mochi identity",
+    "Dependency rot — adding npm deps destroys the zero-dependency moat",
+    "Hallucinated progress — tracker says done but no test proves it"
+  ]
+}
+```
+
+### What rotates on Line 5
+
+The renderer cycles through every MP-1 dimension every 6 seconds:
+
+```
+PITCH    │ Stop raising virtual pets. Raise the product...
+VISION   │ Single source of truth that every agent reads...
+MOAT     │ Zero-dependency Node stdlib. Nothing to break...
+MOONSHOT │ Auto-updating project manifold across all agents...
+PHYSICS  │ Status line = 0 API tokens. 6s rotation = full context...
+DOMINO   │ npm publish dev-mochi — one command install
+EPOCHS   │ ■ Purified → ▶ Anchored → □ Fractal → □ Omega
+ROADMAP  │ NOW: MP-1 protocol integration + npm publish
+RISK     │ Context leakage / Dependency rot / Hallucinated progress
+PLATFORM │ Claude Code statusline API → any terminal
+```
+
+Every agent that reads this status line knows: what we're building, why it matters, what can kill it, and what to do next. No ramp-up required.
+
 ## Why not a pet?
 
 Most status line tools give you a virtual pet that reacts to your coding. Cute, but:
