@@ -1,0 +1,28 @@
+{
+  "name": "MY-PROJECT",
+  "mission": "One-line current mission",
+  "pitch": "One-line elevator pitch",
+  "vision": "What this becomes at scale",
+  "moonshot": "The 10x dream — where this goes if everything works",
+  "brief": "Design brief one-liner for the product",
+  "stack": "Firebase · React · Stripe",
+  "stage": "staging",
+  "target": "my-app.web.app",
+  "roadmap": [
+    "NOW: What you're building this week",
+    "NEXT: What unlocks after NOW ships",
+    "THEN: The medium-term play",
+    "MOON: The endgame"
+  ],
+  "next_steps": [
+    "Immediate action item 1",
+    "Immediate action item 2",
+    "Immediate action item 3"
+  ],
+  "tracker": [
+    { "label": "Auth flow", "status": "done" },
+    { "label": "Payments", "status": "active" },
+    { "label": "Dashboard", "status": "pending" },
+    { "label": "Deploy", "status": "blocked" }
+  ]
+}

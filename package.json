@@ -1,0 +1,21 @@
+{
+  "name": "dev-mochi",
+  "version": "1.0.0",
+  "description": "Project-focused status line for Claude Code. The project IS the beast.",
+  "main": "statusline.js",
+  "bin": {
+    "dev-mochi": "./statusline.js"
+  },
+  "keywords": [
+    "claude-code",
+    "statusline",
+    "developer-tools",
+    "productivity"
+  ],
+  "author": "midnightnow",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/midnightnow/dev-mochi.git"
+  }
+}
