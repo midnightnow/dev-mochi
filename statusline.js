@@ -1,28 +1,21 @@
 #!/usr/bin/env node
 /**
- * dev-mochi — Project-focused status line for Claude Code
+ * dev-mochi v2 — Project-focused status line for Claude Code
  *
  * The project IS the beast. Every line keeps the AI focused on what
  * we're building, why, and what's next. No sprites. No quips. No XP.
  *
- * Reads .devmochi.json from workspace root for project context.
- * Cycles through vision/pitch/roadmap/moonshot on a timer so the AI
- * always has the full picture without eating input tokens.
+ * Supports two config schemas:
  *
- * Config format (.devmochi.json):
- * {
- *   "name": "PROJECT",
- *   "mission": "one-line current mission",
- *   "pitch": "one-line elevator pitch",
- *   "vision": "what this becomes",
- *   "moonshot": "the 10x dream",
- *   "stack": "tech stack summary",
- *   "stage": "staging|production|dev",
- *   "target": "deploy target URL",
- *   "roadmap": ["NOW: ...", "NEXT: ...", "THEN: ...", "MOON: ..."],
- *   "next_steps": ["step 1", "step 2", ...],
- *   "tracker": [{ "label": "Feature", "status": "done|active|blocked|pending" }]
- * }
+ * FLAT (simple projects):
+ *   { name, mission, pitch, vision, moonshot, stack, stage, target, ... }
+ *
+ * NESTED (Platonic/structured projects):
+ *   { identity: { name, geometry, manifold },
+ *     vision: { pitch, mission, moonshot },
+ *     roadmap: { current_deck, milestones },
+ *     constraints: { currency, revenue, platform, forbidden },
+ *     next_steps, tracker }
  */
 
 const fs = require('fs');
@@ -49,6 +42,7 @@ const C = {
   accent:  fg(140, 120, 200),
   gold:    fg(220, 190, 80),
   blue:    fg(90, 140, 210),
+  magenta: fg(180, 100, 180),
 };
 
 const SEP = DIM + ' \u2502 ' + RESET;
@@ -111,7 +105,7 @@ const ICO = {
   pending: DIM + '\u25A1' + RESET,
 };
 
-// ── Project Config ──────────────────────────────────────────────────────────
+// ── Config Loader + Schema Normalizer ───────────────────────────────────────
 
 function loadConfig(cwd) {
   let dir = cwd;
@@ -122,6 +116,43 @@ function loadConfig(cwd) {
     dir = p;
   }
   return null;
+}
+
+// Normalize nested (Platonic) or flat schema into a uniform interface
+function normalize(raw) {
+  if (!raw) return null;
+
+  // Detect nested schema by presence of identity/vision objects
+  const nested = raw.identity && typeof raw.identity === 'object';
+
+  return {
+    // Identity
+    name:      nested ? raw.identity.name : raw.name,
+    geometry:  nested ? raw.identity.geometry : raw.geometry,
+    manifold:  nested ? raw.identity.manifold : raw.manifold,
+
+    // Vision
+    mission:   nested ? (raw.vision && raw.vision.mission) : raw.mission,
+    pitch:     nested ? (raw.vision && raw.vision.pitch) : raw.pitch,
+    moonshot:  nested ? (raw.vision && raw.vision.moonshot) : raw.moonshot,
+    vision:    nested ? null : raw.vision, // flat schema has separate vision string
+
+    // Roadmap
+    current_deck: nested ? (raw.roadmap && raw.roadmap.current_deck) : raw.current_deck,
+    milestones:   nested ? (raw.roadmap && raw.roadmap.milestones) : null,
+    roadmap:      nested ? null : raw.roadmap, // flat schema has roadmap array
+
+    // Constraints
+    constraints: raw.constraints || null,
+
+    // Shared fields
+    stack:       raw.stack,
+    stage:       raw.stage,
+    target:      raw.target,
+    brief:       raw.brief,
+    next_steps:  raw.next_steps || [],
+    tracker:     raw.tracker || [],
+  };
 }
 
 function gitBranch(cwd) {
@@ -139,17 +170,30 @@ function projectName(cwd) {
 
 // ── Line Builders ───────────────────────────────────────────────────────────
 
-// Line 1: PROJECT NAME · mission | stage → target
+// Line 1: IDENTITY — name | geometry | manifold  OR  name · mission | stage → target
 function L1(cfg, cwd) {
   const name = (cfg && cfg.name) || projectName(cwd);
-  let line = C.accent + BOLD + name.toUpperCase() + RESET;
-  if (cfg && cfg.mission) line += DIM + ' \u00b7 ' + RESET + C.white + truncate(cfg.mission, 60) + RESET;
+  let line = C.accent + BOLD + '\u25C6 ' + name.toUpperCase() + RESET;
+
+  if (cfg && cfg.geometry) {
+    line += SEP + C.white + cfg.geometry + RESET;
+  }
+  if (cfg && cfg.manifold) {
+    line += SEP + C.gold + cfg.manifold + RESET;
+  }
+
+  // Fall back to mission for flat configs without geometry
+  if (cfg && !cfg.geometry && cfg.mission) {
+    line += DIM + ' \u00b7 ' + RESET + C.white + truncate(cfg.mission, 55) + RESET;
+  }
+
   if (cfg && cfg.stage) line += SEP + C.orange + cfg.stage + RESET;
   if (cfg && cfg.target) line += DIM + ' \u2192 ' + RESET + DIM + cfg.target + RESET;
+
   return line;
 }
 
-// Line 2: branch | model(size) | context bar
+// Line 2: branch | model | context bar
 function L2(data, branch) {
   const parts = [];
   if (branch) parts.push(C.cyan + '\u2387 ' + RESET + branch);
@@ -178,7 +222,6 @@ function L3(data) {
     const a = [fmtTime(d7.resets_at), fmtTarget(d7.resets_at)].filter(Boolean).join('\u2192');
     parts.push(DIM + '7d ' + RESET + limBar(p, 10) + ' ' + pc(p) + p + '%' + RESET + (a ? DIM + ' ' + a + RESET : ''));
   }
-  // lines + tokens compact
   const add = (data.cost && data.cost.total_lines_added) || 0;
   const rem = (data.cost && data.cost.total_lines_removed) || 0;
   const tIn = (data.context_window && data.context_window.total_input_tokens) || 0;
@@ -189,46 +232,95 @@ function L3(data) {
   return parts.join(SEP);
 }
 
-// Line 4: tracker (feature status board)
+// Line 4: tracker OR constraints
 function L4(cfg) {
-  if (!cfg || !cfg.tracker || !cfg.tracker.length) return DIM + '\u254C'.repeat(60) + RESET;
-  return cfg.tracker.slice(0, 8).map(t => (ICO[t.status] || ICO.pending) + ' ' + DIM + t.label + RESET).join('  ');
+  if (!cfg) return DIM + '\u254C'.repeat(60) + RESET;
+
+  const parts = [];
+
+  // Tracker items
+  if (cfg.tracker && cfg.tracker.length) {
+    parts.push(cfg.tracker.slice(0, 6).map(t =>
+      (ICO[t.status] || ICO.pending) + ' ' + DIM + t.label + RESET
+    ).join('  '));
+  }
+
+  // Constraints inline (if present and room)
+  if (cfg.constraints) {
+    const cParts = [];
+    if (cfg.constraints.currency) cParts.push(C.orange + cfg.constraints.currency + RESET);
+    if (cfg.constraints.revenue) cParts.push(C.muted + cfg.constraints.revenue + RESET);
+    if (cfg.constraints.forbidden && cfg.constraints.forbidden.length) {
+      cParts.push(C.red + '\u2718 ' + cfg.constraints.forbidden.join(', ') + RESET);
+    }
+    if (cParts.length) {
+      if (parts.length) parts.push(SEP);
+      parts.push(cParts.join(DIM + ' \u00b7 ' + RESET));
+    }
+  }
+
+  return parts.length ? parts.join('') : DIM + '\u254C'.repeat(60) + RESET;
 }
 
-// Line 5: rotating context — cycles through vision/pitch/roadmap/moonshot/next_steps
-// Each cycle is 6 seconds so you see everything in ~30s without reading tokens
+// Line 5: rotating context — cycles through all project dimensions
 function L5(cfg) {
   if (!cfg) return '';
 
   const panels = [];
 
+  // Mission (always first if geometry is on line 1)
+  if (cfg.geometry && cfg.mission) {
+    panels.push({ label: 'MISSION', text: cfg.mission, color: C.white });
+  }
+
+  // Pitch
   if (cfg.pitch) panels.push({ label: 'PITCH', text: cfg.pitch, color: C.gold });
+
+  // Vision (flat schema)
   if (cfg.vision) panels.push({ label: 'VISION', text: cfg.vision, color: C.blue });
+
+  // Moonshot
   if (cfg.moonshot) panels.push({ label: 'MOONSHOT', text: cfg.moonshot, color: C.accent });
 
-  // Roadmap items as individual panels
+  // Current deck (nested schema)
+  if (cfg.current_deck) {
+    panels.push({ label: 'DECK', text: cfg.current_deck, color: C.magenta });
+  }
+
+  // Milestones (nested schema)
+  if (cfg.milestones && cfg.milestones.length) {
+    cfg.milestones.forEach(m => {
+      panels.push({ label: 'MILESTONE', text: m, color: C.orange });
+    });
+  }
+
+  // Roadmap (flat schema)
   if (cfg.roadmap && cfg.roadmap.length) {
     cfg.roadmap.forEach(r => {
       panels.push({ label: 'ROADMAP', text: r, color: C.orange });
     });
   }
 
-  // Next steps as individual panels
+  // Next steps
   if (cfg.next_steps && cfg.next_steps.length) {
     cfg.next_steps.forEach((s, i) => {
       panels.push({ label: 'NEXT', text: (i + 1) + '. ' + s, color: C.cyan });
     });
   }
 
+  // Constraints platform (surfaces the deployment path)
+  if (cfg.constraints && cfg.constraints.platform) {
+    panels.push({ label: 'PLATFORM', text: cfg.constraints.platform, color: C.muted });
+  }
+
   if (panels.length === 0) return '';
 
-  // Cycle every 6 seconds
   const idx = Math.floor(Date.now() / 6000) % panels.length;
   const p = panels[idx];
-  return p.color + BOLD + p.label + RESET + DIM + ' \u2502 ' + RESET + C.white + truncate(p.text, 70) + RESET;
+  return p.color + BOLD + p.label + RESET + SEP + C.white + truncate(p.text, 70) + RESET;
 }
 
-// Line 6: stack | design brief one-liner
+// Line 6: stack | brief
 function L6(cfg) {
   if (!cfg) return '';
   const parts = [];
@@ -245,7 +337,8 @@ let data = {};
 try { data = JSON.parse(input); } catch (_) {}
 
 const cwd = (data.workspace && data.workspace.current_dir) || data.cwd || process.cwd();
-const cfg = loadConfig(cwd);
+const raw = loadConfig(cwd);
+const cfg = normalize(raw);
 const branch = gitBranch(cwd);
 
 const lines = [

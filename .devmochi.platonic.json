@@ -1,0 +1,41 @@
+{
+  "identity": {
+    "name": "Platonic Man / AIVA",
+    "geometry": "93-Point Solid (Root 42, Root 51, 5-12-13)",
+    "manifold": "10-24-26 (Count, Measure, Language)"
+  },
+  "vision": {
+    "pitch": "The geometry of the mathematically inevitable.",
+    "mission": "To manifest the perfect world of forms through sovereign local-first intelligence.",
+    "moonshot": "A fully deterministic, biosecure simulation layer that maps 3D geometric coordinates to the meaning of life."
+  },
+  "stage": "dev",
+  "target": "northern-shield.web.app",
+  "roadmap": {
+    "current_deck": "Vitrification of Second Deck (Chapters 55-108)",
+    "milestones": [
+      "Finalize 'The Ares Audit' (Chapter 108)",
+      "Refactor Hardcard Core (Protocol/App separation)",
+      "Deploy Northern Shield deterministic event-sourcing"
+    ]
+  },
+  "constraints": {
+    "currency": "AUD Only",
+    "revenue": "Zero-confection ($0/Zero Customers)",
+    "platform": "Local-First -> Firebase -> iOS/Game Stores",
+    "forbidden": ["Hebrew terms", "30-minute system claims", "Marketing hype"]
+  },
+  "next_steps": [
+    "Map 3D coordinates to 432 Hz audio parameters",
+    "Test EMR/PMS simulation for biosecurity utility",
+    "Execute surgical extraction of verification primitives"
+  ],
+  "tracker": [
+    { "label": "Manifold locked", "status": "done" },
+    { "label": "Residue enforcement", "status": "done" },
+    { "label": "Ares Audit Ch.108", "status": "active" },
+    { "label": "Hardcard separation", "status": "active" },
+    { "label": "Northern Shield", "status": "pending" },
+    { "label": "Omega State", "status": "pending" }
+  ]
+}
